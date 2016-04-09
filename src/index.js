@@ -38,7 +38,7 @@ function renderToCSS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
   root = transformVariants(root);
   root.walkRules(node => {
-    node.eachDecl(decl => {
+    node.walkDecls(decl => {
       if (decl.prop === 'base') {
         decl.remove();
       }
@@ -58,7 +58,7 @@ function renderToJS(source: string, config: RenderConfig): string {
     if (isVariant(node)) {
       return;
     }
-    node.eachDecl(decl => {
+    node.walkDecls(decl => {
       if (decl.prop === 'base') {
         component = decl.value;
       }
