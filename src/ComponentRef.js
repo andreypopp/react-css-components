@@ -6,8 +6,8 @@
 import * as types from 'babel-types';
 
 // TODO: More robust regexpes required!
-const PARSE_REF_RE = /^([a-zA-Z0-9_\-\/]+)(\.([a-zA-Z0-9_]+))?$/;
-const PARSE_NAMED_REF_RE = /^([a-zA-Z0-9_]+)=([a-zA-Z0-9_\-\/]+)(\.([a-zA-Z0-9_]+))?$/;
+const PARSE_REF_RE = /^([a-zA-Z0-9\._\-\/]+)(\?([a-zA-Z0-9_]+))?$/;
+const PARSE_NAMED_REF_RE = /^([a-zA-Z0-9_]+)=([a-zA-Z0-9_\.\-\/]+)(\?([a-zA-Z0-9_]+))?$/;
 
 export type ComponentRef = {
   source: string;

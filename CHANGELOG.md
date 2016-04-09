@@ -1,3 +1,22 @@
+## 0.3.0
+
+* [BREAKING] Component spec format changed from using `.` as a delimiter between
+  module and export name to `?`.
+
+  Update:
+
+      Label {
+        base: mylib.Label;
+        color: red;
+      }
+
+  To:
+
+      Label {
+        base: mylib?Label;
+        color: red;
+      }
+
 ## 0.2.0
 
 * [FEATURE] When specifying `base` for a styled component it is treated as an

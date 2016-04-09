@@ -1,4 +1,4 @@
 Label {
-  base: lib.Label;
+  base: lib?Label;
   color: red;
 }
