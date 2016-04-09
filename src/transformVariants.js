@@ -4,18 +4,30 @@
  */
 
 export default function transformVariants(root) {
-  let rules = [];
-  root.walkRules(rule => {
-    if (!isVariant(rule)) {
+  let toAppend = [];
+  root.each(rule => {
+    if (isComponent(rule)) {
+      toAppend = toAppend.concat(flattenVariants(rule));
+    }
+  });
+  root.append(...toAppend);
+  return root;
+}
+
+function flattenVariants(rule) {
+  let toRemove = [];
+  let toAppend = [];
+  rule.each(variant => {
+    if (!isVariant(variant)) {
       return;
     }
-    let component = findComponent(rule);
-    rule = rule.remove().clone();
-    rule.selector = component.selector + rule.selector;
-    rules.push(rule);
+    toRemove.push(variant);
+    variant = variant.clone();
+    variant.selector = rule.selector + variant.selector;
+    toAppend = toAppend.concat(variant, ...flattenVariants(variant));
   });
-  root.append(...rules);
-  return root;
+  toRemove.forEach(variant => variant.remove());
+  return toAppend;
 }
 
 export function isVariant(node) {
@@ -25,9 +37,18 @@ export function isVariant(node) {
   );
 }
 
+export function isComponent(node) {
+  return (
+    node.type === 'rule' &&
+    node.selector.charAt(0) !== ':' &&
+    node.parent &&
+    node.parent.type === 'root'
+  );
+}
+
 function findComponent(node) {
   while (true) {
-    if (node.type === 'rule' && !isVariant(node)) {
+    if (isComponent(node)) {
       return node;
     }
     if (!node.parent) {
