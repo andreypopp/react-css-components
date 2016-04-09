@@ -34,7 +34,7 @@ export function render(source: string, config: RenderConfig = {}): {js: string; 
   return {js, css};
 }
 
-function renderToCSS(source: string, config: RenderConfig): string {
+function renderToCSS(source: string, _config: RenderConfig): string {
   let root = postcss.parse(source);
   root = transformVariants(root);
   root.walkRules(node => {
@@ -85,7 +85,7 @@ function exportComponent(name: string, component: string, className: string) {
     types.spreadProperty(types.identifier('props')),
     types.objectProperty(
       types.identifier('className'),
-      types.memberExpression(types.identifier('styles'), types.identifier(name))
+      types.memberExpression(types.identifier('styles'), types.identifier(className))
     )
   ]);
   let elementNode = types.callExpression(

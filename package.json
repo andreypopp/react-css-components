@@ -9,7 +9,10 @@
     ]
   },
   "eslintConfig": {
-    "extends": "prometheusresearch"
+    "extends": "prometheusresearch",
+    "env": {
+      "mocha": true
+    }
   },
   "scripts": {
     "test": "make test"

@@ -6,7 +6,7 @@
 /**
  * Variant names we want to see compiled as CSS pseudo classes.
  */
-const SUPPORTED_PSEUDO_CLASSES = {
+const _SUPPORTED_PSEUDO_CLASSES = {
   focus: true,
   hover: true,
   active: true,
@@ -74,17 +74,4 @@ export function isComponent(node) {
     node.parent &&
     node.parent.type === 'root'
   );
-}
-
-function findComponent(node) {
-  while (true) {
-    if (isComponent(node)) {
-      return node;
-    }
-    if (!node.parent) {
-      break;
-    }
-    node = node.parent;
-  }
-  return null;
 }
