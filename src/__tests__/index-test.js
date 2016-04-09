@@ -32,7 +32,7 @@ Label {
     console.log(css);
   });
 
-  it.only('renders react components with nested pseudoclasses', function() {
+  it('renders react components with nested pseudoclasses', function() {
     let {js, css} = render(`
 
 Label {
