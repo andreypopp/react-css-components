@@ -1,0 +1,9 @@
+Label {
+  color: red;
+  :hover {
+    color: white;
+    :focus {
+      color: black;
+    }
+  }
+}

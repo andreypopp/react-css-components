@@ -1,67 +1,37 @@
+/**
+ * @copyright 2016-present, React CSS Components team
+ * @flow
+ */
+
+import assert from 'assert';
+import fs from 'fs';
+import path from 'path';
 import {render} from '../';
+
+const REACT_CSS_RE = /\.react\.css$/;
 
 describe('react-css-components', function() {
 
-  it('renders react compoents', function() {
-    let {js, css} = render(`
-
-Label {
-  color: red;
-}
-    `, {requestCSS: 'react-css-components?css!styles.react.css'});
-    console.log('--- js');
-    console.log(js);
-    console.log('--- css');
-    console.log(css);
-  });
-
-
-  it('renders react components with pseudoclasses', function() {
-    let {js, css} = render(`
-
-Label {
-  color: red;
-  :hover {
-    color: white;
+  function readFixture(filename) {
+    filename = path.join(__dirname, 'fixtures', filename);
+    return fs.readFileSync(filename, 'utf8').trim();
   }
-}
-    `, {requestCSS: 'react-css-components?css!styles.react.css'});
-    console.log('--- js');
-    console.log(js);
-    console.log('--- css');
-    console.log(css);
-  });
 
-  it('renders react components with nested pseudoclasses', function() {
-    let {js, css} = render(`
+  fs.readdirSync(path.join(__dirname, 'fixtures')).forEach(filename => {
 
-Label {
-  color: red;
-  :hover {
-    color: white;
-    :focus {
-      color: black;
+    if (!REACT_CSS_RE.exec(filename)) {
+      return;
     }
-  }
-}
-    `, {requestCSS: 'react-css-components?css!styles.react.css'});
-    console.log('--- js');
-    console.log(js);
-    console.log('--- css');
-    console.log(css);
+    let jsExpect = filename.replace(REACT_CSS_RE, '.js');
+    let cssExpect = filename.replace(REACT_CSS_RE, '.css');
+
+    it('renders: ' + filename, function() {
+      let source = readFixture(filename);
+      let {js, css} = render(source, {requestCSS: 'css'});
+      assert.equal(js, readFixture(jsExpect));
+      assert.equal(css, readFixture(cssExpect));
+    });
+
   });
 
-  it('renders react components based on specified DOM component', function() {
-    let {js, css} = render(`
-
-Label {
-  base: span;
-  color: red;
-}
-    `, {requestCSS: 'react-css-components?css!styles.react.css'});
-    console.log('--- js');
-    console.log(js);
-    console.log('--- css');
-    console.log(css);
-  });
 });

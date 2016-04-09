@@ -1,0 +1,9 @@
+:local(.Label) {
+    color: red
+}
+:local(.Label:hover) {
+    color: white
+}
+:local(.Label:hover:focus) {
+    color: black
+}
