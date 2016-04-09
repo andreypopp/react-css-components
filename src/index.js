@@ -7,6 +7,7 @@ import * as types from 'babel-types';
 import * as postcss from 'postcss';
 import * as LoaderUtils from 'loader-utils';
 import generate from 'babel-generator';
+import transformVariants, {isVariant} from './transformVariants';
 
 const LOADER = require.resolve('../webpack');
 
@@ -35,6 +36,7 @@ export function render(source: string, config: RenderConfig = {}): {js: string; 
 
 function renderToCSS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
+  root = transformVariants(root);
   root.walkRules(node => {
     let cssNode = node.clone();
     cssNode.selector = `:local(.${node.selector})`;
@@ -47,6 +49,9 @@ function renderToJS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
   let statements = [];
   root.walkRules(node => {
+    if (isVariant(node)) {
+      return;
+    }
     statements.push(exportComponent(node.selector, 'div', node.selector));
   });
   statements.unshift(

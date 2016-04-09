@@ -7,6 +7,10 @@ Header {
   font-size: 200%;
   font-weight: bold;
   color: black;
+
+  :hover {
+    color: red;
+  }
 }
 
 Content {
