@@ -10,7 +10,7 @@ added later.)
 ## Motivation
 
 Provide a simplified component based API for consuming CSS modules which
-abstracts the call site from being dependent on CSS classes.
+abstracts the call site from being dependent on CSS modules.
 
 ## Installation & Usage
 
