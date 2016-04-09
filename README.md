@@ -1,7 +1,5 @@
 # React CSS components
 
-**PREVIEW:** This package is not yet released on npm and is not ready to be used.
-
 A React centric convention for [CSS modules][].
 
 (Currently only Webpack is supported but support for other build system can be
