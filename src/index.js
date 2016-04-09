@@ -8,6 +8,8 @@ import * as postcss from 'postcss';
 import * as LoaderUtils from 'loader-utils';
 import generate from 'babel-generator';
 import transformVariants, {isVariant} from './transformVariants';
+import HTMLTagList from './HTMLTagList';
+import * as ComponentRef from './ComponentRef';
 
 const LOADER = require.resolve('../webpack');
 
@@ -53,14 +55,22 @@ function renderToCSS(source: string, _config: RenderConfig): string {
 function renderToJS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
   let statements = [];
-  let component = 'div';
+  let component = types.stringLiteral('div');
   root.walkRules(node => {
     if (isVariant(node)) {
       return;
     }
     node.walkDecls(decl => {
       if (decl.prop === 'base') {
-        component = decl.value;
+        if (HTMLTagList[decl.value]) {
+          component = types.stringLiteral(decl.value);
+        } else {
+          let componentRef = ComponentRef.parse(decl.value);
+          component = types.identifier(node.selector + '__Base');
+          statements.unshift(
+            ComponentRef.importDeclaration(component, decl.value)
+          );
+        }
       }
     });
     statements.push(exportComponent(node.selector, component, node.selector));
@@ -92,7 +102,7 @@ function exportComponent(name: string, component: string, className: string) {
     types.memberExpression(
       types.identifier('React'),
       types.identifier('createElement')),
-    [types.stringLiteral(component), propsNode]
+    [component, propsNode]
   );
   let componentNode = types.functionDeclaration(
     types.identifier(name),
