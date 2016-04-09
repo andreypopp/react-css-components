@@ -65,7 +65,6 @@ function renderToJS(source: string, config: RenderConfig): string {
         if (HTMLTagList[decl.value]) {
           component = types.stringLiteral(decl.value);
         } else {
-          let componentRef = ComponentRef.parse(decl.value);
           component = types.identifier(node.selector + '__Base');
           statements.unshift(
             ComponentRef.importDeclaration(component, decl.value)
