@@ -50,4 +50,18 @@ Label {
     console.log('--- css');
     console.log(css);
   });
+
+  it('renders react components based on specified DOM component', function() {
+    let {js, css} = render(`
+
+Label {
+  base: span;
+  color: red;
+}
+    `, {requestCSS: 'react-css-components?css!styles.react.css'});
+    console.log('--- js');
+    console.log(js);
+    console.log('--- css');
+    console.log(css);
+  });
 });

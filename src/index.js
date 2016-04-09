@@ -38,6 +38,11 @@ function renderToCSS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
   root = transformVariants(root);
   root.walkRules(node => {
+    node.eachDecl(decl => {
+      if (decl.prop === 'base') {
+        decl.remove();
+      }
+    });
     let cssNode = node.clone();
     cssNode.selector = `:local(.${node.selector})`;
     node.replaceWith(cssNode);
@@ -48,11 +53,17 @@ function renderToCSS(source: string, config: RenderConfig): string {
 function renderToJS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
   let statements = [];
+  let component = 'div';
   root.walkRules(node => {
     if (isVariant(node)) {
       return;
     }
-    statements.push(exportComponent(node.selector, 'div', node.selector));
+    node.eachDecl(decl => {
+      if (decl.prop === 'base') {
+        component = decl.value;
+      }
+    });
+    statements.push(exportComponent(node.selector, component, node.selector));
   });
   statements.unshift(
     types.importDeclaration(
