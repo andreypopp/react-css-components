@@ -1,0 +1,4 @@
+node_modules/
+lib/
+examples/webpack/bundle
+npm-debug.log

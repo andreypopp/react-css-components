@@ -1,0 +1,46 @@
+{
+  "name": "react-css-components",
+  "version": "0.1.0",
+  "description": "Define styled React components using CSS based module format",
+  "main": "lib/index.js",
+  "babel": {
+    "presets": [
+      "prometheusresearch"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "prometheusresearch"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreypopp/react-css-components.git"
+  },
+  "keywords": [
+    "react",
+    "css",
+    "postcss-plugin",
+    "webpack"
+  ],
+  "author": "Andrey Popp <8mayday@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andreypopp/react-css-components/issues"
+  },
+  "homepage": "https://github.com/andreypopp/react-css-components#readme",
+  "dependencies": {
+    "babel-types": "^6.7.2",
+    "loader-utils": "^0.2.14",
+    "postcss": "^5.0.19"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.7.5",
+    "babel-core": "^6.7.6",
+    "babel-preset-prometheusresearch": "^0.1.0",
+    "eslint": "^2.7.0",
+    "eslint-config-prometheusresearch": "^0.2.0",
+    "mocha": "^2.4.5"
+  }
+}
