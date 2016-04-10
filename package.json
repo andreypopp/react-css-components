@@ -23,9 +23,12 @@
   },
   "keywords": [
     "react",
+    "react-dom",
     "css",
+    "postcss",
     "postcss-plugin",
-    "webpack"
+    "webpack",
+    "webpack-loader"
   ],
   "author": "Andrey Popp <8mayday@gmail.com>",
   "license": "MIT",
