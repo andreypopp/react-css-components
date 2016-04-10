@@ -52,6 +52,7 @@
     "eslint": "^2.7.0",
     "eslint-config-prometheusresearch": "^0.2.0",
     "mocha": "^2.4.5",
-    "babel-generator": "^6.7.5"
+    "babel-generator": "^6.7.5",
+    "eslint-plugin-react": "^4.3.0"
   }
 }
