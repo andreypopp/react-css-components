@@ -3,6 +3,8 @@
  * @flow
  */
 
+import * as Syntax from './Syntax';
+
 /**
  * Variant names we want to see compiled as CSS pseudo classes.
  */
@@ -36,7 +38,7 @@ const _SUPPORTED_PSEUDO_CLASSES = {
 export default function transformVariants(root) {
   let toAppend = [];
   root.each(rule => {
-    if (isComponent(rule)) {
+    if (Syntax.isComponent(rule)) {
       toAppend = toAppend.concat(flattenVariants(rule));
     }
   });
@@ -48,7 +50,7 @@ function flattenVariants(rule) {
   let toRemove = [];
   let toAppend = [];
   rule.each(variant => {
-    if (!isVariant(variant)) {
+    if (!Syntax.isVariant(variant)) {
       return;
     }
     toRemove.push(variant);
@@ -58,20 +60,4 @@ function flattenVariants(rule) {
   });
   toRemove.forEach(variant => variant.remove());
   return toAppend;
-}
-
-export function isVariant(node) {
-  return (
-    node.type === 'rule' &&
-    node.selector.charAt(0) === ':'
-  );
-}
-
-export function isComponent(node) {
-  return (
-    node.type === 'rule' &&
-    node.selector.charAt(0) !== ':' &&
-    node.parent &&
-    node.parent.type === 'root'
-  );
 }

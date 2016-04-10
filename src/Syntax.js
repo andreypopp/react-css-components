@@ -13,3 +13,10 @@ export function isComponent(node) {
     node.parent.type === 'root'
   );
 }
+
+export function isVariant(node) {
+  return (
+    node.type === 'rule' &&
+    node.selector.charAt(0) === ':'
+  );
+}
