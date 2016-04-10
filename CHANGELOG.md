@@ -2,6 +2,8 @@
 
 * [FIX] Fix compilation for CSS with separate (unnested) pseudoclasses.
 
+* [FIX] Fix compilation for CSS placed within media queries.
+
 ## 0.3.0
 
 * [BREAKING] Component spec format changed from using `.` as a delimiter between
