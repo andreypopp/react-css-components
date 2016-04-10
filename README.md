@@ -1,6 +1,7 @@
 # React CSS components
 
 [![Travis build status](https://img.shields.io/travis/andreypopp/react-css-components/master.svg)](https://travis-ci.org/andreypopp/react-css-components)
+[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/react-css-components)
 
 A React centric convention for [CSS modules][].
 
