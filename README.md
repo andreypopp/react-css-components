@@ -1,5 +1,7 @@
 # React CSS components
 
+[![Travis build status](https://img.shields.io/travis/andreypopp/react-css-components/master.svg)](https://travis-ci.org/andreypopp/react-css-components)
+
 A React centric convention for [CSS modules][].
 
 (Currently only Webpack is supported but support for other build system can be
