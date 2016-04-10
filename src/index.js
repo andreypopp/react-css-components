@@ -7,7 +7,7 @@ import * as types from 'babel-types';
 import * as postcss from 'postcss';
 import * as LoaderUtils from 'loader-utils';
 import generate from 'babel-generator';
-import transformVariants, {isVariant} from './transformVariants';
+import transformVariants from './transformVariants';
 import HTMLTagList from './HTMLTagList';
 import * as ComponentRef from './ComponentRef';
 import * as Syntax from './Syntax';

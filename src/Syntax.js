@@ -5,7 +5,7 @@
 
 const COMPONENT_RE = /^[a-zA-Z_0-9]+$/;
 
-export function isComponent(node: PostCSSNode) {
+export function isComponent(node) {
   return (
     node.type === 'rule' &&
     COMPONENT_RE.exec(node.selector) &&
