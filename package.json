@@ -4,6 +4,9 @@
   "description": "Define styled React components using CSS based module format",
   "main": "lib/index.js",
   "babel": {
+    "plugins": [
+      "ast-literal"
+    ],
     "presets": [
       "prometheusresearch"
     ]
@@ -39,7 +42,8 @@
   "dependencies": {
     "babel-types": "^6.7.2",
     "loader-utils": "^0.2.14",
-    "postcss": "^5.0.19"
+    "postcss": "^5.0.19",
+    "babel-plugin-ast-literal": "^0.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
@@ -47,6 +51,7 @@
     "babel-preset-prometheusresearch": "^0.1.0",
     "eslint": "^2.7.0",
     "eslint-config-prometheusresearch": "^0.2.0",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "babel-generator": "^6.7.5"
   }
 }
