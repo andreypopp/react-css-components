@@ -1,0 +1,9 @@
+Label {
+  color: red;
+}
+
+@media (min-width: 1000px) {
+  Label {
+    color: white;
+  }
+}

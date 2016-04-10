@@ -10,6 +10,7 @@ import generate from 'babel-generator';
 import transformVariants, {isVariant} from './transformVariants';
 import HTMLTagList from './HTMLTagList';
 import * as ComponentRef from './ComponentRef';
+import * as Syntax from './Syntax';
 
 const LOADER = require.resolve('../webpack');
 
@@ -57,7 +58,7 @@ function renderToJS(source: string, config: RenderConfig): string {
   let statements = [];
   let component = types.stringLiteral('div');
   root.walkRules(node => {
-    if (isVariant(node)) {
+    if (!Syntax.isComponent(node)) {
       return;
     }
     node.walkDecls(decl => {

@@ -1,3 +1,7 @@
+## 0.3.1
+
+* [FIX] Fix compilation for CSS with separate (unnested) pseudoclasses.
+
 ## 0.3.0
 
 * [BREAKING] Component spec format changed from using `.` as a delimiter between
