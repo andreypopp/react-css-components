@@ -15,6 +15,10 @@
     "extends": "prometheusresearch",
     "env": {
       "mocha": true
+    },
+    "globals": {
+      "expr": true,
+      "stmt": true
     }
   },
   "scripts": {
