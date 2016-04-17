@@ -38,10 +38,10 @@ Now you can author React components in `Styles.react.css`:
 
     Label {
       color: red;
+    }
 
-      :hover {
-        color: white;
-      }
+    Label:hover {
+      color: white;
     }
 
 And consume them like regular React components:
