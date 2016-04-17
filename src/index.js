@@ -128,7 +128,7 @@ function renderToJS(source: string, config: RenderConfig): string {
       registerComponent(componentName);
     });
     if (componentNames.length === 1) {
-      let componentName = componentNames[0]
+      let componentName = componentNames[0];
       node.walkDecls(decl => {
         if (decl.prop === 'base') {
           configureComponentBase(componentName, decl.value);
