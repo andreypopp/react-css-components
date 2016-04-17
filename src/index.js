@@ -10,7 +10,7 @@ import {identifier, stringLiteral, program} from 'babel-types';
 import generate from 'babel-generator';
 
 import * as postcss from 'postcss';
-import createSelectorParser from 'postcss-selector-parser';
+import createSelectorParser, {className} from 'postcss-selector-parser';
 
 import HTMLTagList from './HTMLTagList';
 import * as ComponentRef from './ComponentRef';
@@ -34,11 +34,9 @@ const LOADER = require.resolve('../webpack');
 
 const COMPONENT_RE = /^[a-zA-Z_0-9]+$/;
 
-const selectorParser = createSelectorParser();
-
 function findComponentNames(node: CSSNode): Array<string> {
   let componentNames = [];
-  selectorParser.process(node.selector).res.eachTag(selector => {
+  createSelectorParser().process(node.selector).res.eachTag(selector => {
     if (COMPONENT_RE.exec(selector.value)) {
       componentNames.push(selector.value);
     }
@@ -66,11 +64,16 @@ function removeBaseDeclaration(node) {
 function localizeComponentRule(node) {
   let componentNames = findComponentNames(node);
   if (componentNames.length > 0) {
-    let selector = selectorParser.process(node.selector).res;
+    let toProcess = [];
+    let selector = createSelectorParser().process(node.selector).res;
     selector.eachTag(selector => {
       if (componentNames.indexOf(selector.value) > -1) {
-        selector.replaceWith(createSelectorParser.className({value: selector.value}));
+        toProcess.push(selector);
       }
+    });
+    toProcess.forEach(selector => {
+      let nextSelector = className({value: selector.value});
+      selector.replaceWith(nextSelector);
     });
     let nextNode = node.clone();
     nextNode.selector = selector.toString();
