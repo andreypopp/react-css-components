@@ -1,0 +1,13 @@
+[ignore]
+.*/node_modules/esformatter/.*
+.*/node_modules/fbjs/.*.flow
+.*/test/.*
+
+[include]
+
+[libs]
+decls
+
+[options]
+esproposal.class_static_fields=enable
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue

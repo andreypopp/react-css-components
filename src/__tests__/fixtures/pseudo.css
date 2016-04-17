@@ -1,6 +1,0 @@
-:local(.Label) {
-    color: red
-}
-:local(.Label:hover) {
-    color: white
-}

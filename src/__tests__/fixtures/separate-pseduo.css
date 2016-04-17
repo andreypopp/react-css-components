@@ -1,6 +1,6 @@
-:local(.Label) {
+.Label {
     color: red
 }
-:local(.Label:hover) {
+.Label:hover {
     color: red
 }

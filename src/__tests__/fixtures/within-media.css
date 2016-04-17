@@ -1,10 +1,10 @@
-:local(.Label) {
+.Label {
 
   color: red
 }
 
 @media (min-width: 1000px) {
-  :local(.Label) {
+  .Label {
 
     color: white
   }

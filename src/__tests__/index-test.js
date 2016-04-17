@@ -10,6 +10,9 @@ import {render} from '../';
 
 const REACT_CSS_RE = /\.react\.css$/;
 
+declare function describe(description: string, body: any): void;
+declare function it(description: string, body: any): void;
+
 describe('react-css-components', function() {
 
   function readFixture(filename) {
