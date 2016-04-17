@@ -13,6 +13,7 @@ import * as postcss from 'postcss';
 import createSelectorParser, {className} from 'postcss-selector-parser';
 
 import HTMLTagList from './HTMLTagList';
+import CSSPseudoClassList from './CSSPseudoClassList';
 import * as ComponentRef from './ComponentRef';
 
 type RenderConfig = {
@@ -22,8 +23,14 @@ type RenderConfig = {
 type JSNode = Object;
 type CSSNode = Object;
 
+type VariantSpec = {
+  componentName: string;
+  variantName: string;
+};
+
 type ComponentSpec = {
   base: ?JSNode;
+  variants: {[name: string]: boolean};
 };
 
 type ComponentSpecCollection = {
@@ -32,16 +39,49 @@ type ComponentSpecCollection = {
 
 const LOADER = require.resolve('../webpack');
 
-const COMPONENT_RE = /^[a-zA-Z_0-9]+$/;
+const COMPONENT_RE = /^[A-Z][a-zA-Z_0-9]*$/;
+
+function parseSelector(selector) {
+  let parser = createSelectorParser();
+  return parser.process(selector).res;
+}
 
 function findComponentNames(node: CSSNode): Array<string> {
   let componentNames = [];
-  createSelectorParser().process(node.selector).res.eachTag(selector => {
+  let selector = parseSelector(node.selector);
+  selector.eachTag(selector => {
     if (COMPONENT_RE.exec(selector.value)) {
       componentNames.push(selector.value);
     }
   });
   return componentNames;
+}
+
+function findVariants(node: CSSNode): Array<VariantSpec> {
+  let variantNames = [];
+  let selector = parseSelector(node.selector);
+  selector.eachPseudo(selector => {
+    let idx = selector.parent.nodes.indexOf(selector);
+    let prev = selector.parent.nodes[idx - 1];
+    if (prev && prev.type === 'tag' && COMPONENT_RE.exec(prev.value)) {
+      variantNames.push({
+        componentName: prev.value,
+        variantName: selector.value.slice(1),
+      });
+    }
+  });
+  return variantNames;
+}
+
+function isPrimaryComponent(node: CSSNode): boolean {
+  let selector = parseSelector(node.selector);
+  return (
+    selector.nodes.length === 1 &&
+    selector.nodes[0].type === 'selector' &&
+    selector.nodes[0].nodes.length === 1 &&
+    selector.nodes[0].nodes[0].type === 'tag' &&
+    COMPONENT_RE.exec(selector.nodes[0].nodes[0].value)
+  );
 }
 
 function renderToCSS(source: string): string {
@@ -64,14 +104,38 @@ function removeBaseDeclaration(node) {
 function localizeComponentRule(node) {
   let componentNames = findComponentNames(node);
   if (componentNames.length > 0) {
-    let toProcess = [];
-    let selector = createSelectorParser().process(node.selector).res;
+    let toClassify = [];
+    let toPseudoClassify = [];
+    let selector = parseSelector(node.selector);
     selector.eachTag(selector => {
       if (componentNames.indexOf(selector.value) > -1) {
-        toProcess.push(selector);
+        toClassify.push(selector);
       }
     });
-    toProcess.forEach(selector => {
+    selector.eachPseudo(selector => {
+      let idx = selector.parent.nodes.indexOf(selector);
+      let prev = selector.parent.nodes[idx - 1];
+      if (prev && prev.type === 'tag' && componentNames.indexOf(prev.value) > -1) {
+        let componentName = prev.value;
+        let variantName = selector.value.slice(1);
+        if (CSSPseudoClassList[variantName]) {
+          selector.parent.parent.append(className({value: componentName + '__' + variantName}));
+        } else {
+          toPseudoClassify.push(selector);
+        }
+      }
+    });
+    toPseudoClassify.forEach(selector => {
+      let parent = selector.parent;
+      let idx = parent.nodes.indexOf(selector);
+      let prev = parent.nodes[idx - 1];
+      let componentName = prev.value;
+      let variantName = selector.value.slice(1);
+      let nextSelector = className({value: componentName + '__' + variantName});
+      prev.removeSelf();
+      selector.replaceWith(nextSelector);
+    });
+    toClassify.forEach(selector => {
       let nextSelector = className({value: selector.value});
       selector.replaceWith(nextSelector);
     });
@@ -93,8 +157,19 @@ function renderToJS(source: string, config: RenderConfig): string {
 
   function registerComponent(componentName) {
     if (components[componentName] === undefined) {
-      components[componentName] = {base: stringLiteral('div')};
+      components[componentName] = {
+        base: stringLiteral('div'),
+        variants: {},
+      };
     }
+  }
+
+  function registerComponentVariants(componentName, variantName) {
+    invariant(
+      components[componentName],
+      'Trying to configure base for an unknown component %s', componentName
+    );
+    components[componentName].variants[variantName] = true;
   }
 
   function configureComponentBase(componentName, base) {
@@ -128,10 +203,12 @@ function renderToJS(source: string, config: RenderConfig): string {
     if (componentNames.length === 0) {
       return;
     }
+
     componentNames.forEach(componentName => {
       registerComponent(componentName);
     });
-    if (componentNames.length === 1) {
+
+    if (isPrimaryComponent(node)) {
       let componentName = componentNames[0];
       node.walkDecls(decl => {
         if (decl.prop === 'base') {
@@ -139,17 +216,35 @@ function renderToJS(source: string, config: RenderConfig): string {
         }
       });
     }
+
+    let variants = findVariants(node);
+    for (let i = 0; i < variants.length; i++) {
+      let variant = variants[i];
+      registerComponentVariants(
+        variant.componentName,
+        variant.variantName
+      );
+    }
   });
 
   // generate JS code from component configurations
   for (let componentName in components) {
     let component = components[componentName];
     if (components.hasOwnProperty(componentName)) {
+      let className = expr`styles.${identifier(componentName)}`;
+      for (let variantName in component.variants) {
+        className = expr`
+          ${className} + (variant.${identifier(variantName)}
+                          ? ' ' + styles.${identifier(componentName + '__' + variantName)}
+                          : '')
+        `;
+      }
       statements.push(stmt`
-        export function ${identifier(componentName)}(props) {
+        export function ${identifier(componentName)}({variant, ...props}) {
+          let className = ${className};
           return React.createElement(
             ${component.base},
-            {...props, className: styles.${identifier(componentName)}}
+            {...props, className}
           );
         }
       `);

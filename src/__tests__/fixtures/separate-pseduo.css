@@ -1,6 +1,6 @@
 .Label {
     color: red
 }
-.Label:hover {
+.Label:hover,.Label__hover {
     color: red
 }

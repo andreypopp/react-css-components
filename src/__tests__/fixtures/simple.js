@@ -1,6 +1,9 @@
 import React from "react";
 import styles from "css";
-export function Label(props) {
-  return React.createElement("div", { ...props, className: styles.Label
+export function Label({
+  variant,
+  ...props }) {
+  let className = styles.Label;
+  return React.createElement("div", { ...props, className
   });
 }

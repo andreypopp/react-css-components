@@ -1,0 +1,6 @@
+.Label__important > span {
+    color: red
+}
+.Label,.Label__shadow {
+    color: white
+}

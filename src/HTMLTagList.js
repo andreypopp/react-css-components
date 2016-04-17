@@ -3,7 +3,7 @@
  * @flow
  */
 
-let HTMLTagList: {[name: string]: ?boolean} = {
+let HTMLTagList: {[name: string]: boolean} = {
   'a': true,
   'abbr': true,
   'acronym': true,

@@ -1,0 +1,6 @@
+Label:important > span {
+  color: red;
+}
+Label, Label:shadow {
+  color: white;
+}
