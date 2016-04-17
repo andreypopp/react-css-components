@@ -122,6 +122,7 @@ function renderToJS(source: string, config: RenderConfig): string {
     components[componentName].base = base;
   }
 
+  // walk CSS AST and register all component configurations
   root.walkRules(node => {
     let componentNames = findComponentNames(node);
     if (componentNames.length === 0) {
@@ -140,6 +141,7 @@ function renderToJS(source: string, config: RenderConfig): string {
     }
   });
 
+  // generate JS code from component configurations
   for (let componentName in components) {
     let component = components[componentName];
     if (components.hasOwnProperty(componentName)) {
@@ -157,6 +159,9 @@ function renderToJS(source: string, config: RenderConfig): string {
   return generate(program(imports.concat(statements))).code;
 }
 
+/**
+ * Webpack loader for React CSS component modules.
+ */
 export function loader(source: string): string {
   this.cacheable();
   let query = LoaderUtils.parseQuery(this.query);
@@ -170,6 +175,9 @@ export function loader(source: string): string {
   }
 }
 
+/**
+ * Render React CSS component module into JS and CSS sources.
+ */
 export function render(source: string, config: RenderConfig): {js: string; css: string} {
   let js = renderToJS(source, {requestCSS: config.requestCSS});
   let css = renderToCSS(source);
