@@ -3,15 +3,12 @@
 [![Travis build status](https://img.shields.io/travis/andreypopp/react-css-components/master.svg)](https://travis-ci.org/andreypopp/react-css-components)
 [![npm](https://img.shields.io/npm/v/react-css-components.svg)](https://www.npmjs.com/package/react-css-components)
 
-A React centric convention for [CSS modules][].
-
-(Currently only Webpack is supported but support for other build system can be
-added later.)
-
 ## Motivation
 
-Provide a simplified component based API for consuming CSS modules which
-abstracts the call site from being dependent on CSS modules.
+Define React presentational components with CSS.
+
+The implementation is based on [CSS modules][]. In fact React CSS Components is
+just a thin API on top of CSS modules.
 
 ## Installation & Usage
 
