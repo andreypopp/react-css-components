@@ -315,7 +315,7 @@ function renderToJS(source: string, config: RenderConfig): string {
         }
       }
       statements.push(stmt`
-        export function ${identifier(componentName)}({variant, ...props}) {
+        export function ${identifier(componentName)}({variant = {}, ...props}) {
           let className = ${className};
           return React.createElement(
             ${component.base},

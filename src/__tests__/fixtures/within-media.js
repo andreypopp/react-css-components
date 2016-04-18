@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "css";
 export function Label({
-  variant,
+  variant = {},
   ...props }) {
   let className = styles.Label;
   return React.createElement("div", { ...props, className
