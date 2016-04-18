@@ -135,15 +135,6 @@ function findVariants(node: CSSNode): Array<VariantSpec> {
   return variantNames;
 }
 
-function renderPropVariantCondition(selector) {
-  let value = '';
-  selector.eachInside(selector => {
-    console.log(selector);
-    value = value + (selector.value || '');
-  });
-  return value;
-}
-
 function isPrimaryComponent(node: CSSNode): boolean {
   let selector = parseSelector(node.selector);
   return (
