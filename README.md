@@ -64,6 +64,23 @@ They are compiled as CSS classes which then can be controlled from JS via
 
     <Label variant={{emphasis: true}} /> // sets both classes with `color` and `font-weight`
 
+## Prop variants
+
+You can define variants which are based on some JavaScript expression against
+props:
+
+    Label {
+      color: red;
+    }
+
+    Label:prop(mode == "emphasis") {
+      font-weight: bold;
+    }
+
+They are compiled as CSS classes which then can be controlled from JS:
+
+    <Label mode="emphasis" /> // sets both classes with `color` and `font-weight`
+
 ## TODO
 
 * [ ] Support adding PostCSS transform to build pipeline (think autoprefixer).
