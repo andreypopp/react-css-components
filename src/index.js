@@ -3,11 +3,15 @@
  * @flow
  */
 
+import {createHash} from 'crypto';
 import invariant from 'invariant';
 import * as LoaderUtils from 'loader-utils';
 
 import {identifier, stringLiteral, program} from 'babel-types';
 import generate from 'babel-generator';
+import traverse from 'babel-traverse';
+import * as types from 'babel-types';
+import {parse} from 'babylon';
 
 import * as postcss from 'postcss';
 import createSelectorParser, {className} from 'postcss-selector-parser';
@@ -26,6 +30,7 @@ type CSSNode = Object;
 type VariantSpec = {
   componentName: string;
   variantName: string;
+  expression: ?string;
 };
 
 type ComponentSpec = {
@@ -41,9 +46,53 @@ const LOADER = require.resolve('../webpack');
 
 const COMPONENT_RE = /^[A-Z][a-zA-Z_0-9]*$/;
 
+const PROP_VARIANT_NAME = ':prop';
+
+function hash(value) {
+  let hasher = createHash('md5');
+  hasher.update(value);
+  return hasher.digest('hex');
+}
+
 function parseSelector(selector) {
   let parser = createSelectorParser();
   return parser.process(selector).res;
+}
+
+function isPropReference(path) {
+  if (!types.isIdentifier(path.node)) {
+    return false;
+  }
+  if (path.node.__seen) {
+    return false;
+  }
+  if (path.scope.parent !== undefined) {
+    return false;
+  }
+  if (types.isMemberExpression(path.parentPath.node)) {
+    while (types.isMemberExpression(path.parentPath.node)) {
+      if (path.node === path.parentPath.node.property) {
+        return false;
+      }
+      path = path.parentPath;
+    }
+  }
+  return true;
+}
+
+function parsePropVariantExpression(expression) {
+  let node = parse(expression);
+  traverse(node, {
+    enter(path) {
+      if (isPropReference(path)) {
+        let nextNode = expr`props.${path.node}`;
+        nextNode.object.__seen = true;
+        path.replaceWith(nextNode);
+      }
+    }
+  });
+  node = node.program.body[0].expression;
+  return node;
 }
 
 function findComponentNames(node: CSSNode): Array<string> {
@@ -61,16 +110,38 @@ function findVariants(node: CSSNode): Array<VariantSpec> {
   let variantNames = [];
   let selector = parseSelector(node.selector);
   selector.eachPseudo(selector => {
+    let expression = null;
+    let variantName = selector.value.slice(1);
+
+    if (selector.value === PROP_VARIANT_NAME) {
+      expression = node.selector.slice(
+        selector.source.start.column + PROP_VARIANT_NAME.length,
+        selector.source.end.column - 1
+      );
+      variantName = variantName + '__' + hash(expression).slice(0, 6);
+      expression = parsePropVariantExpression(expression);
+    }
+
     let idx = selector.parent.nodes.indexOf(selector);
     let prev = selector.parent.nodes[idx - 1];
     if (prev && prev.type === 'tag' && COMPONENT_RE.exec(prev.value)) {
       variantNames.push({
         componentName: prev.value,
-        variantName: selector.value.slice(1),
+        variantName,
+        expression,
       });
     }
   });
   return variantNames;
+}
+
+function renderPropVariantCondition(selector) {
+  let value = '';
+  selector.eachInside(selector => {
+    console.log(selector);
+    value = value + (selector.value || '');
+  });
+  return value;
 }
 
 function isPrimaryComponent(node: CSSNode): boolean {
@@ -131,6 +202,13 @@ function localizeComponentRule(node) {
       let prev = parent.nodes[idx - 1];
       let componentName = prev.value;
       let variantName = selector.value.slice(1);
+      if (selector.value === PROP_VARIANT_NAME) {
+        let expression = node.selector.slice(
+          selector.source.start.column + PROP_VARIANT_NAME.length,
+          selector.source.end.column - 1
+        );
+        variantName = variantName + '__' + hash(expression).slice(0, 6);
+      }
       let nextSelector = className({value: componentName + '__' + variantName});
       prev.removeSelf();
       selector.replaceWith(nextSelector);
@@ -164,12 +242,12 @@ function renderToJS(source: string, config: RenderConfig): string {
     }
   }
 
-  function registerComponentVariants(componentName, variantName) {
+  function registerComponentVariants({componentName, variantName, expression}) {
     invariant(
       components[componentName],
       'Trying to configure base for an unknown component %s', componentName
     );
-    components[componentName].variants[variantName] = true;
+    components[componentName].variants[variantName] = {expression};
   }
 
   function configureComponentBase(componentName, base) {
@@ -220,10 +298,7 @@ function renderToJS(source: string, config: RenderConfig): string {
     let variants = findVariants(node);
     for (let i = 0; i < variants.length; i++) {
       let variant = variants[i];
-      registerComponentVariants(
-        variant.componentName,
-        variant.variantName
-      );
+      registerComponentVariants(variant);
     }
   });
 
@@ -233,11 +308,20 @@ function renderToJS(source: string, config: RenderConfig): string {
     if (components.hasOwnProperty(componentName)) {
       let className = expr`styles.${identifier(componentName)}`;
       for (let variantName in component.variants) {
-        className = expr`
-          ${className} + (variant.${identifier(variantName)}
-                          ? ' ' + styles.${identifier(componentName + '__' + variantName)}
-                          : '')
-        `;
+        let variant = component.variants[variantName];
+        if (variant.expression) {
+          className = expr`
+            ${className} + (${variant.expression}
+                            ? ' ' + styles.${identifier(componentName + '__' + variantName)}
+                            : '')
+          `;
+        } else {
+          className = expr`
+            ${className} + (variant.${identifier(variantName)}
+                            ? ' ' + styles.${identifier(componentName + '__' + variantName)}
+                            : '')
+          `;
+        }
       }
       statements.push(stmt`
         export function ${identifier(componentName)}({variant, ...props}) {

@@ -45,7 +45,9 @@
   "homepage": "https://github.com/andreypopp/react-css-components#readme",
   "dependencies": {
     "babel-plugin-ast-literal": "^0.4.0",
+    "babel-traverse": "^6.7.6",
     "babel-types": "^6.7.2",
+    "babylon": "^6.7.0",
     "invariant": "^2.2.1",
     "loader-utils": "^0.2.14",
     "postcss": "^5.0.19",

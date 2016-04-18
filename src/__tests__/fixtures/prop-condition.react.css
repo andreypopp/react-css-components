@@ -1,0 +1,12 @@
+Label:prop(level == 1 && level < 1) {
+  color: red;
+}
+Label:prop(mode[0] == 1) {
+  color: white;
+}
+Label:prop(callback()) {
+  color: yellow;
+}
+Label:prop(indicies.some(x => x.ok)) {
+  color: black;
+}
