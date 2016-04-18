@@ -22,10 +22,10 @@ test::
 ci::
 	@$(BIN)/mocha $(MOCHA_OPTS) --watch --watch-extensions json,md $(TESTS)
 
-version-major version-minor version-patch:: lint test
+version-major version-minor version-patch:: lint check test build
 	@npm version $(@:version-%=%)
 
-publish:: lint check test build
+publish::
 	@npm publish
 	@git push --tags origin HEAD:master
 
