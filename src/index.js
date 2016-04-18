@@ -30,12 +30,12 @@ type CSSNode = Object;
 type VariantSpec = {
   componentName: string;
   variantName: string;
-  expression: ?string;
+  expression: ?JSNode;
 };
 
 type ComponentSpec = {
   base: ?JSNode;
-  variants: {[name: string]: boolean};
+  variants: {[name: string]: {expression: ?JSNode}};
 };
 
 type ComponentSpecCollection = {
