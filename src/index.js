@@ -339,7 +339,10 @@ export function loader(source: string): string {
     let result = renderToCSS(source);
     return result;
   } else {
-    let requestCSS = `!!style-loader!css-loader?modules!${LOADER}?css!${this.resource}`;
+    let loadCSS = query.loadCSS
+      ? query.loadCSS
+      : 'style-loader!css-loader';
+    let requestCSS = `!!${loadCSS}!${LOADER}?css!${this.resource}`;
     let result = renderToJS(source, {requestCSS});
     return result;
   }
