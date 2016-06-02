@@ -11,6 +11,7 @@ import {identifier, stringLiteral, program} from 'babel-types';
 import generate from 'babel-generator';
 import traverse from 'babel-traverse';
 import * as types from 'babel-types';
+import {expr, stmt} from 'babel-plugin-ast-literal/api';
 import {parse} from 'babylon';
 
 import * as postcss from 'postcss';
@@ -219,7 +220,7 @@ function renderToJS(source: string, config: RenderConfig): string {
 
   let imports = stmt`
     import React from "react";
-    import styles from "${stringLiteral(config.requestCSS)}";
+    import styles from "${config.requestCSS}";
   `;
   let statements = [];
   let components: ComponentSpecCollection = {};
@@ -259,7 +260,7 @@ function renderToJS(source: string, config: RenderConfig): string {
       imports.push(stmt`
         import {
           ${identifier(ref.name)} as ${base}
-        } from "${stringLiteral(ref.source)}";
+        } from "${ref.source}";
       `);
     }
 
