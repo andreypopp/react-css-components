@@ -44,6 +44,7 @@
   },
   "homepage": "https://github.com/andreypopp/react-css-components#readme",
   "dependencies": {
+    "babel-generator": "^6.9.0",
     "babel-plugin-ast-literal": "^0.5.4",
     "babel-traverse": "^6.7.6",
     "babel-types": "^6.7.2",
