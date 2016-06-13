@@ -83,6 +83,6 @@ They are compiled as CSS classes which then can be controlled from JS:
 
 ## TODO
 
-* [ ] Support adding PostCSS transform to build pipeline (think autoprefixer).
+* [ ] Document how to add PostCSS transform to build pipeline (think autoprefixer).
 
 [CSS modules]: https://github.com/css-modules/css-modules
