@@ -342,7 +342,7 @@ export function loader(source: string): string {
   } else {
     let loadCSS = query.loadCSS
       ? query.loadCSS
-      : ['style-loader', 'css-loader'];
+      : ['style-loader', 'css-loader?modules'];
     let requestCSS = `!!${loadCSS.join('!')}!${LOADER}?css!${this.resource}`;
     let result = renderToJS(source, {requestCSS});
     return result;
