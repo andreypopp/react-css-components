@@ -8,9 +8,10 @@ Header {
   font-weight: bold;
   color: black;
 
-  :hover {
-    color: red;
-  }
+}
+
+Header:hover {
+  color: red;
 }
 
 Content {
