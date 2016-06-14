@@ -21,6 +21,7 @@ import HTMLTagList from './HTMLTagList';
 import CSSPseudoClassList from './CSSPseudoClassList';
 import * as ComponentRef from './ComponentRef';
 
+
 type RenderConfig = {
   requestCSS: string;
 };
@@ -44,6 +45,8 @@ type ComponentSpecCollection = {
 };
 
 const LOADER = require.resolve('../webpack');
+
+const OBJECT_ASSIGN = require.resolve('object-assign');
 
 const COMPONENT_RE = /^[A-Z][a-zA-Z_0-9]*$/;
 
@@ -219,8 +222,9 @@ function renderToJS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
 
   let imports = stmt`
-    import React from "react";
-    import styles from "${config.requestCSS}";
+    var React = require("react");
+    var objectAssign = require("${OBJECT_ASSIGN}");
+    var styles = require("${config.requestCSS}");
   `;
   let statements = [];
   let components: ComponentSpecCollection = {};
@@ -258,9 +262,7 @@ function renderToJS(source: string, config: RenderConfig): string {
       );
       base = identifier(componentName + '__Base');
       imports.push(stmt`
-        import {
-          ${identifier(ref.name)} as ${base}
-        } from "${ref.source}";
+        var ${base} = require("${ref.source}").${identifier(ref.name)};
       `);
     }
 
@@ -316,11 +318,12 @@ function renderToJS(source: string, config: RenderConfig): string {
         }
       }
       statements.push(stmt`
-        export function ${identifier(componentName)}({variant = {}, ...props}) {
-          let className = ${className};
+        module.exports.${identifier(componentName)} = function ${identifier(componentName)}(props) {
+          var variant = props.variant || {};
+          var className = ${className};
           return React.createElement(
             ${component.base},
-            {...props, className}
+            objectAssign({}, props, {className: className, variant: undefined})
           );
         }
       `);
