@@ -1,5 +1,6 @@
 # React CSS components
 
+[![Join the chat at https://gitter.im/andreypopp/sitegen](https://img.shields.io/badge/gitter-join%20chat-green.svg)](https://gitter.im/andreypopp/sitegen)
 [![Travis build status](https://img.shields.io/travis/andreypopp/react-css-components/master.svg)](https://travis-ci.org/andreypopp/react-css-components)
 [![npm](https://img.shields.io/npm/v/react-css-components.svg)](https://www.npmjs.com/package/react-css-components)
 
