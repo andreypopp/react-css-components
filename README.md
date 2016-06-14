@@ -10,6 +10,10 @@ Define React presentational components with CSS.
 The implementation is based on [CSS modules][]. In fact React CSS Components is
 just a thin API on top of CSS modules.
 
+**NOTE:** The current implementation is based on Webpack but everything is ready
+to be ported onto other build systems (generic API is here just not yet
+documented). Raise an issue or better submit a PR if you have some ideas.
+
 ## Installation & Usage
 
 Install from npm:
