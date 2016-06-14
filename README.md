@@ -129,7 +129,7 @@ They are compiled as CSS classes which then can be controlled from JS via
 ```js
 <Label variant={{emphasis: true}} /> // sets both classes with `color` and `font-weight`
 ```
-### Variants controlled with JS expression
+### JavaScript expressions
 
 You can define variants which are conditionally applied if JS expression against
 props evaluates to a truthy value.
