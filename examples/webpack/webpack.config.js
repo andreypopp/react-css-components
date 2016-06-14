@@ -17,7 +17,7 @@ module.exports = {
     loaders: [
       {
         test: /\.react.css$/,
-        loader: 'babel-loader!react-css-components/webpack',
+        loader: 'babel-loader!react-css-components',
       },
       {
         test: /\.js$/,

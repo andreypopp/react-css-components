@@ -3,6 +3,7 @@
   "version": "0.6.9",
   "description": "Define styled React components using CSS based module format",
   "main": "lib/index.js",
+  "webpackLoader": "webpack.js",
   "babel": {
     "plugins": [
       "ast-literal"
