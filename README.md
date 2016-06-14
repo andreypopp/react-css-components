@@ -10,9 +10,11 @@
 - [Motivation](#motivation)
 - [Installation & Usage](#installation-&-usage)
 - [Base components](#base-components)
-- [Custom composite components as bases](#custom-composite-components-as-bases)
+  - [DOM components](#dom-components)
+  - [Composite components](#composite-components)
 - [Variants](#variants)
-- [Prop variants](#prop-variants)
+  - [Named variants](#named-variants)
+  - [JavaScript expressions](#javascript-expressions)
 - [TODO](#todo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
