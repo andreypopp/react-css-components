@@ -15,7 +15,10 @@
 - [Variants](#variants)
   - [Named variants](#named-variants)
   - [JavaScript expressions](#javascript-expressions)
-- [TODO](#todo)
+- [Advanced configuration](#advanced-configuration)
+  - [CSS extraction with Webpack](#css-extraction-with-webpack)
+  - [Using with Sass/Less/Stylus/...](#using-with-sasslessstylus)
+  - [Using with custom PostCSS plugins (including autoprefixer)](#using-with-custom-postcss-plugins-including-autoprefixer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -158,9 +161,18 @@ used to determine if corresponding CSS classes should be applied to DOM:
 <Label mode="emphasis" /> // sets both classes with `color` and `font-weight`
 ```
 
-## TODO
+## Advanced configuration
 
-* [ ] Document how to add PostCSS transform to build pipeline (think autoprefixer).
-* [ ] Document how to do CSS extraction.
+### CSS extraction with Webpack
+
+TODO: documentation
+
+### Using with Sass/Less/Stylus/...
+
+TODO: documentation
+
+### Using with custom PostCSS plugins (including autoprefixer)
+
+TODO: documentation
 
 [CSS modules]: https://github.com/css-modules/css-modules
