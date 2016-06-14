@@ -22,6 +22,9 @@ test::
 ci::
 	@$(BIN)/mocha $(MOCHA_OPTS) --watch --watch-extensions json,md $(TESTS)
 
+doctoc:
+	@$(BIN)/doctoc --title '**Table of Contents**' ./README.md
+
 version-major version-minor version-patch:: lint check test build
 	@npm version $(@:version-%=%)
 
