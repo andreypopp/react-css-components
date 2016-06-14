@@ -7,3 +7,10 @@ export function Label({
   return React.createElement("div", { ...props, className
   });
 }
+export function Another({
+  variant = {},
+  ...props }) {
+  let className = styles.Another + (props.one < props.another() && (props.two > 2 || props.three == "three") ? ' ' + styles.Another__prop__44eef9 : '');
+  return React.createElement("div", { ...props, className
+  });
+}

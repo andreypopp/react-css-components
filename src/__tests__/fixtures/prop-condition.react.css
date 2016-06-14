@@ -10,3 +10,6 @@ Label:prop(callback()) {
 Label:prop(indicies.some(x => x.ok)) {
   color: black;
 }
+Another:prop(one < another() && (two > 2 || three == "three")) {
+  color: yellow;
+}
