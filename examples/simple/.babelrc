@@ -1,3 +1,3 @@
 {
-  "presets": ["prometheusresearch"]
+  "presets": ["es2015", "react"]
 }
