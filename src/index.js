@@ -23,7 +23,7 @@ import * as ComponentRef from './ComponentRef';
 
 
 type RenderConfig = {
-  requestCSS: string;
+  loadCSS: string;
 };
 
 type JSNode = Object;
@@ -45,8 +45,6 @@ type ComponentSpecCollection = {
 };
 
 const LOADER = require.resolve('../webpack');
-
-const OBJECT_ASSIGN = require.resolve('object-assign');
 
 const COMPONENT_RE = /^[A-Z][a-zA-Z_0-9]*$/;
 
@@ -223,11 +221,26 @@ function renderToJS(source: string, config: RenderConfig): string {
 
   let imports = stmt`
     var React = require("react");
-    var objectAssign = require("${OBJECT_ASSIGN}");
-    var styles = require("${config.requestCSS}");
+    var styles = require("${config.loadCSS}");
   `;
   let statements = [];
   let components: ComponentSpecCollection = {};
+
+  statements.push(stmt`
+    function reconcileProps(props, className) {
+      var nextProps = {};
+      for (var k in props) {
+        if (k === 'variant') {
+          continue;
+        }
+        if (props.hasOwnProperty(k)) {
+          nextProps[k] = props[k];
+        }
+      }
+      nextProps.className = className;
+      return nextProps;
+    }
+  `);
 
   function registerComponent(componentName) {
     if (components[componentName] === undefined) {
@@ -323,7 +336,7 @@ function renderToJS(source: string, config: RenderConfig): string {
           var className = ${className};
           return React.createElement(
             ${component.base},
-            objectAssign({}, props, {className: className, variant: undefined})
+            reconcileProps(props, className)
           );
         }
       `);
@@ -346,8 +359,9 @@ export function loader(source: string): string {
     let loadCSS = query.loadCSS
       ? query.loadCSS
       : ['style-loader', 'css-loader?modules'];
-    let requestCSS = `!!${loadCSS.join('!')}!${LOADER}?css!${this.resource}`;
-    let result = renderToJS(source, {requestCSS});
+    let result = renderToJS(source, {
+      loadCSS: `!!${loadCSS.join('!')}!${LOADER}?css!${this.resource}`,
+    });
     return result;
   }
 }
@@ -356,7 +370,7 @@ export function loader(source: string): string {
  * Render React CSS component module into JS and CSS sources.
  */
 export function render(source: string, config: RenderConfig): {js: string; css: string} {
-  let js = renderToJS(source, {requestCSS: config.requestCSS});
+  let js = renderToJS(source, {loadCSS: config.loadCSS});
   let css = renderToCSS(source);
   return {js, css};
 }

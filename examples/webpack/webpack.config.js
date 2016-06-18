@@ -1,23 +1,11 @@
-var path = require('path');
+var common = require('../webpack.config');
 
-module.exports = {
-  entry: './index.js',
-  output: {
-    path: 'bundle',
-    filename: 'bundle.js',
-  },
-  devtool: 'cheap-eval-source-map',
-  resolve: {
-    fallback: path.join(__dirname, 'node_modules'),
-  },
-  resolveLoader: {
-    fallback: path.join(__dirname, 'node_modules'),
-  },
+module.exports = Object.assign({}, common(__dirname), {
   module: {
     loaders: [
       {
         test: /\.react.css$/,
-        loader: 'babel-loader!react-css-components',
+        loader: 'react-css-components',
       },
       {
         test: /\.js$/,
@@ -26,4 +14,4 @@ module.exports = {
       }
     ]
   }
-};
+});
