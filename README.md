@@ -16,10 +16,10 @@
 - [Variants](#variants)
   - [Named variants](#named-variants)
   - [JavaScript expressions](#javascript-expressions)
-- [Advanced configuration](#advanced-configuration)
-  - [CSS extraction with Webpack](#css-extraction-with-webpack)
-  - [Using with Sass/Less/Stylus/...](#using-with-sasslessstylus)
-  - [Using with custom PostCSS plugins (including autoprefixer)](#using-with-custom-postcss-plugins-including-autoprefixer)
+- [Customizing CSS loading](#customizing-css-loading)
+  - [CSS extraction](#css-extraction)
+  - [Using with SASS/SCSS/LESS/Stylus/...](#using-with-sassscsslessstylus)
+  - [Using with PostCSS (including autoprefixer)](#using-with-postcss-including-autoprefixer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
