@@ -21,8 +21,9 @@ import HTMLTagList from './HTMLTagList';
 import CSSPseudoClassList from './CSSPseudoClassList';
 import * as ComponentRef from './ComponentRef';
 
+
 type RenderConfig = {
-  requestCSS: string;
+  loadCSS: string;
 };
 
 type JSNode = Object;
@@ -219,11 +220,27 @@ function renderToJS(source: string, config: RenderConfig): string {
   let root = postcss.parse(source);
 
   let imports = stmt`
-    import React from "react";
-    import styles from "${config.requestCSS}";
+    var React = require("react");
+    var styles = require("${config.loadCSS}");
   `;
   let statements = [];
   let components: ComponentSpecCollection = {};
+
+  statements.push(stmt`
+    function reconcileProps(props, className) {
+      var nextProps = {};
+      for (var k in props) {
+        if (k === 'variant') {
+          continue;
+        }
+        if (props.hasOwnProperty(k)) {
+          nextProps[k] = props[k];
+        }
+      }
+      nextProps.className = className;
+      return nextProps;
+    }
+  `);
 
   function registerComponent(componentName) {
     if (components[componentName] === undefined) {
@@ -258,9 +275,7 @@ function renderToJS(source: string, config: RenderConfig): string {
       );
       base = identifier(componentName + '__Base');
       imports.push(stmt`
-        import {
-          ${identifier(ref.name)} as ${base}
-        } from "${ref.source}";
+        var ${base} = require("${ref.source}").${identifier(ref.name)};
       `);
     }
 
@@ -316,11 +331,12 @@ function renderToJS(source: string, config: RenderConfig): string {
         }
       }
       statements.push(stmt`
-        export function ${identifier(componentName)}({variant = {}, ...props}) {
-          let className = ${className};
+        module.exports.${identifier(componentName)} = function ${identifier(componentName)}(props) {
+          var variant = props.variant || {};
+          var className = ${className};
           return React.createElement(
             ${component.base},
-            {...props, className}
+            reconcileProps(props, className)
           );
         }
       `);
@@ -343,8 +359,9 @@ export function loader(source: string): string {
     let loadCSS = query.loadCSS
       ? query.loadCSS
       : ['style-loader', 'css-loader?modules'];
-    let requestCSS = `!!${loadCSS.join('!')}!${LOADER}?css!${this.resource}`;
-    let result = renderToJS(source, {requestCSS});
+    let result = renderToJS(source, {
+      loadCSS: `!!${loadCSS.join('!')}!${LOADER}?css!${this.resource}`,
+    });
     return result;
   }
 }
@@ -353,7 +370,7 @@ export function loader(source: string): string {
  * Render React CSS component module into JS and CSS sources.
  */
 export function render(source: string, config: RenderConfig): {js: string; css: string} {
-  let js = renderToJS(source, {requestCSS: config.requestCSS});
+  let js = renderToJS(source, {loadCSS: config.loadCSS});
   let css = renderToCSS(source);
   return {js, css};
 }

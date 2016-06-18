@@ -30,7 +30,10 @@ describe('react-css-components', function() {
 
     it('renders: ' + filename, function() {
       let source = readFixture(filename);
-      let {js, css} = render(source, {requestCSS: 'css'});
+      let {js, css} = render(source, {
+        loadCSS: 'css',
+        filename: filename,
+      });
       assert.equal(js, readFixture(jsExpect));
       assert.equal(css, readFixture(cssExpect));
     });

@@ -16,16 +16,17 @@
 - [Variants](#variants)
   - [Named variants](#named-variants)
   - [JavaScript expressions](#javascript-expressions)
-- [Advanced configuration](#advanced-configuration)
-  - [CSS extraction with Webpack](#css-extraction-with-webpack)
-  - [Using with Sass/Less/Stylus/...](#using-with-sasslessstylus)
-  - [Using with custom PostCSS plugins (including autoprefixer)](#using-with-custom-postcss-plugins-including-autoprefixer)
+- [Customizing CSS loading](#customizing-css-loading)
+  - [CSS extraction](#css-extraction)
+  - [Using with SASS/SCSS/LESS/Stylus/...](#using-with-sassscsslessstylus)
+  - [Using with PostCSS (including autoprefixer)](#using-with-postcss-including-autoprefixer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Motivation
 
-Define React presentational components with CSS.
+Define React presentational components with CSS (or even SASS or Less if you
+like).
 
 The implementation is based on [CSS modules][]. In fact React CSS Components is
 just a thin API on top of CSS modules.
@@ -38,7 +39,7 @@ documented). Raise an issue or better submit a PR if you have some ideas.
 
 Install from npm:
 
-    % npm install react-css-components
+    % npm install react-css-components style-loader css-loader
 
 Configure in `webpack.config.js`:
 
@@ -162,18 +163,31 @@ used to determine if corresponding CSS classes should be applied to DOM:
 <Label mode="emphasis" /> // sets both classes with `color` and `font-weight`
 ```
 
-## Advanced configuration
+## Customizing CSS loading
 
-### CSS extraction with Webpack
+By default React CSS components loads CSS using `style-loader!css-loader` loader
+chain. That could be configured differently using `loadCSS` loader parameter.
 
-TODO: documentation
+This could be used to enable features such as *CSS extraction*, processing
+stylesheets with *PostCSS/Autoprefixer* or even authoring stylesheets with
+*SASS* or *LESS*.
 
-### Using with Sass/Less/Stylus/...
+### CSS extraction
 
-TODO: documentation
+See the [complete example](./examples/css-extraction/webpack.config.js) which
+configures
+[`extract-text-webpack-plugin`](https://github.com/webpack/extract-text-webpack-plugin)
+to extract stylesheets to a separate chunk.
 
-### Using with custom PostCSS plugins (including autoprefixer)
+### Using with SASS/SCSS/LESS/Stylus/...
 
-TODO: documentation
+See the [complete example](./examples/sass/webpack.config.js) which
+uses SASS/SCSS to create React components.
+
+### Using with PostCSS (including autoprefixer)
+
+See the [complete example](./examples/postcss//webpack.config.js) which
+configures PostCSS with Autoprefixer to automatically add vendor prefixes to
+stylesheets.
 
 [CSS modules]: https://github.com/css-modules/css-modules
