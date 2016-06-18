@@ -44,6 +44,10 @@
     "url": "https://github.com/andreypopp/react-css-components/issues"
   },
   "homepage": "https://github.com/andreypopp/react-css-components#readme",
+  "peerDependencies": {
+    "style-loader": "*",
+    "css-loader": "*"
+  },
   "dependencies": {
     "babel-generator": "^6.9.0",
     "babel-plugin-ast-literal": "^0.5.4",

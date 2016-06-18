@@ -39,7 +39,7 @@ documented). Raise an issue or better submit a PR if you have some ideas.
 
 Install from npm:
 
-    % npm install react-css-components
+    % npm install react-css-components style-loader css-loader
 
 Configure in `webpack.config.js`:
 
