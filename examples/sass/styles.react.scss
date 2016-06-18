@@ -1,0 +1,22 @@
+$padding: 10px;
+$color: red;
+
+Root {
+  padding: $padding;
+  font-family: Menlo;
+}
+
+Header {
+  font-size: 200%;
+  font-weight: bold;
+  color: black;
+
+}
+
+Header:hover {
+  color: $color;
+}
+
+Content {
+  color: $color;
+}

@@ -1,0 +1,19 @@
+Root {
+  padding: 10px;
+  font-family: Menlo;
+}
+
+Header {
+  font-size: 200%;
+  font-weight: bold;
+  color: black;
+
+}
+
+Header:hover {
+  color: red;
+}
+
+Content {
+  color: #444;
+}

@@ -1,0 +1,20 @@
+{
+  "name": "react-css-components-example-webpack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack -w"
+  },
+  "dependencies": {
+    "autoprefixer": "^6.3.6",
+    "babel-loader": "^6.2.4",
+    "css-loader": "^0.23.1",
+    "postcss-loader": "^0.9.1",
+    "react": "^15.0.0",
+    "react-css-components": "../../",
+    "react-dom": "^15.0.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.12.14"
+  }
+}
