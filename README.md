@@ -50,7 +50,7 @@ module.exports = {
     loaders: [
       {
         test: /\.react.css$/,
-        loader: 'babel-loader!react-css-components',
+        loader: 'react-css-components',
       }
     ]
   }
