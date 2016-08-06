@@ -56,7 +56,7 @@ function hash(value) {
   return hasher.digest('hex');
 }
 
-function dashToCamelCase(name: String) {
+function dashToCamelCase(name: string) {
   return name.replace(/-([a-z])/g, word => word[1].toUpperCase());
 }
 
