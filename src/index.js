@@ -56,6 +56,10 @@ function hash(value) {
   return hasher.digest('hex');
 }
 
+function dashToCamelCase(name: String) {
+  return name.replace(/-([a-z])/g, word => word[1].toUpperCase());
+}
+
 function parseSelector(selector) {
   let parser = createSelectorParser();
   return parser.process(selector).res;
@@ -181,7 +185,7 @@ function localizeComponentRule(node) {
       let prev = selector.parent.nodes[idx - 1];
       if (prev && prev.type === 'tag' && componentNames.indexOf(prev.value) > -1) {
         let componentName = prev.value;
-        let variantName = selector.value.slice(1);
+        let variantName = dashToCamelCase(selector.value.slice(1));
         if (CSSPseudoClassList[variantName]) {
           selector.parent.parent.append(className({value: componentName + '__' + variantName}));
         } else {
@@ -194,7 +198,7 @@ function localizeComponentRule(node) {
       let idx = parent.nodes.indexOf(selector);
       let prev = parent.nodes[idx - 1];
       let componentName = prev.value;
-      let variantName = selector.value.slice(1);
+      let variantName = dashToCamelCase(selector.value.slice(1));
       if (selector.value === PROP_VARIANT_NAME) {
         let expression = node.selector.slice(
           selector.source.start.column + PROP_VARIANT_NAME.length,
@@ -316,6 +320,7 @@ function renderToJS(source: string, config: RenderConfig): string {
       let className = expr`styles.${identifier(componentName)}`;
       for (let variantName in component.variants) {
         let variant = component.variants[variantName];
+        variantName = dashToCamelCase(variantName);
         if (variant.expression) {
           className = expr`
             ${className} + (${variant.expression}
