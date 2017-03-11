@@ -99,8 +99,8 @@ import {FancyButton} from './styles.react.css'
 
 ### Composite components
 
-In fact any React components which accepts `className` props can be used as a
-base. That's means that React CSS Components can be used as theming tool for any
+In fact any React component which accepts `className` props can be used as a
+base. That means that React CSS Components can be used as theming tool for any
 UI library.
 
 Example:
@@ -114,7 +114,7 @@ DangerButton {
 
 ## Variants
 
-Variants is a mechanism which allows to define styling variants for a component.
+Variants is a mechanism which allows defining component styling variants.
 
 ### Named variants
 
@@ -153,7 +153,7 @@ Label:prop(mode == "emphasis") {
 }
 ```
 
-Note that any free variable reference a member of `props`, thus in JS `mode`
+Note that any free variable references a member of `props`, thus in JS `mode`
 becomes `props.mode` in the example above.
 
 They are compiled as CSS classes as well. JS expressions within `prop(..)` are
