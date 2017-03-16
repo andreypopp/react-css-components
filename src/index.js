@@ -325,19 +325,20 @@ function renderToJS(source: string, config: RenderConfig): string {
           className = expr`
             ${className} + (${variant.expression}
                             ? ' ' + styles.${identifier(componentName + '__' + variantName)}
-                            : '')
+                            : '') + extraClassName
           `;
         } else {
           className = expr`
             ${className} + (variant.${identifier(variantName)}
                             ? ' ' + styles.${identifier(componentName + '__' + variantName)}
-                            : '')
+                            : '') + extraClassName
           `;
         }
       }
       statements.push(stmt`
         module.exports.${identifier(componentName)} = function ${identifier(componentName)}(props) {
           var variant = props.variant || {};
+          var extraClassName = props.className ? ' ' + props.className : '';
           var className = ${className};
           return React.createElement(
             ${component.base},
